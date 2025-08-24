@@ -76,6 +76,14 @@ def generate_launch_description():
         arguments=["gripper_controller", "--controller-manager", "/controller_manager"],
     )
 
+    # Joint state monitor for enhanced feedback
+    joint_state_monitor = Node(
+        package="lerobot_controller",
+        executable="joint_state_monitor.py",
+        name="joint_state_monitor",
+        output="screen",
+    )
+
     return LaunchDescription(
         [
             is_sim_arg,
@@ -84,5 +92,6 @@ def generate_launch_description():
             joint_state_broadcaster_spawner,
             arm_controller_spawner,
             gripper_controller_spawner,
+            joint_state_monitor,
         ]
     )
