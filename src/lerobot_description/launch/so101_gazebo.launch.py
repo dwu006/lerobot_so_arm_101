@@ -45,7 +45,7 @@ def generate_launch_description():
                 PythonLaunchDescriptionSource([os.path.join(
                     get_package_share_directory("ros_gz_sim"), "launch"), "/gz_sim.launch.py"]),
                 launch_arguments=[
-                    ("gz_args", [" -v 4 -r empty.sdf "]
+                    ("gz_args", [" -v 4 -r ", os.path.join(lerobot_description, "worlds", "so101_with_objects.world")]
                     )
                 ]
              )
@@ -58,11 +58,32 @@ def generate_launch_description():
                    "-name", "so101"],
     )
 
-    gz_ros2_bridge = Node(
+    # Bridge for clock
+    gz_ros2_bridge_clock = Node(
         package="ros_gz_bridge",
         executable="parameter_bridge",
         arguments=[
             "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
+        ]
+    )
+
+    # Bridge for RGB camera
+    gz_ros2_bridge_rgb = Node(
+        package="ros_gz_bridge",
+        executable="parameter_bridge",
+        arguments=[
+            "/so101/camera_link/rgb_camera@sensor_msgs/msg/Image[gz.msgs.Image",
+            "/so101/camera_link/rgb_camera@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
+        ]
+    )
+
+    # Bridge for depth camera
+    gz_ros2_bridge_depth = Node(
+        package="ros_gz_bridge",
+        executable="parameter_bridge",
+        arguments=[
+            "/so101/camera_link/depth_camera@sensor_msgs/msg/Image[gz.msgs.Image",
+            "/so101/camera_link/depth_camera@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
         ]
     )
 
@@ -72,5 +93,7 @@ def generate_launch_description():
         robot_state_publisher_node,
         gazebo,
         gz_spawn_entity,
-        gz_ros2_bridge
+        gz_ros2_bridge_clock,
+        gz_ros2_bridge_rgb,
+        gz_ros2_bridge_depth
     ])

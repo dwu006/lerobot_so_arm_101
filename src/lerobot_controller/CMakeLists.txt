@@ -18,7 +18,7 @@ install(
 
 # Install Python scripts
 install(
-  PROGRAMS scripts/joint_state_monitor.py
+  PROGRAMS scripts/joint_state_monitor.py scripts/joint_controller.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
